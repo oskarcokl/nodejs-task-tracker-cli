@@ -2,7 +2,19 @@
 
 import { exit } from 'process';
 import fs from 'fs';
-import { pathToFileURL } from 'url';
+
+type DB = {
+    tasks: Task[];
+};
+
+type Task = {
+    id: number;
+    description: string;
+    status: 'todo' | 'in-progress' | 'done';
+    // maybe format to a string?
+    createAd: Date;
+    updatedAd: Date;
+};
 
 // GLOBALS
 const dbPath = 'db.json';
@@ -36,7 +48,7 @@ function main() {
 
     switch (command) {
         case 'add':
-            addTask(process.argv[3]);
+            addTask(db, process.argv[3]);
             break;
         case 'update':
             break;
@@ -56,17 +68,33 @@ function main() {
     //# sourceMappingURL=main.js.map
 }
 
-function addTask(description: string) {
+function addTask(db: DB, description: string) {
     if (typeof description === 'undefined') {
         console.log('A description must be provided to add a task');
         exit(1);
     }
+
+    const maxId = db.tasks.reduce((pId, t) => Math.max(pId, t.id), 0);
+
+    // create a task object
+    const newTask: Task = {
+        id: maxId + 1,
+        description: description,
+        status: 'todo',
+        createAd: new Date(),
+        updatedAd: new Date(),
+    };
+    // write the task object to the file
+    db.tasks.push(newTask);
+    fs.writeFileSync(dbPath, JSON.stringify(db));
+    // write that creating of task was successful
+    console.log(` Task added successfully (ID: ${newTask.id})`);
 }
 
 function createDb() {
     console.log('creating DB');
     try {
-        fs.writeFileSync(dbPath, '{}', { flag: 'w+' });
+        fs.writeFileSync(dbPath, '{"tasks": []}', { flag: 'w+' });
     } catch (error) {
         console.log(error);
     }
