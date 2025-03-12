@@ -1,0 +1,31 @@
+{
+    "name": "task-tracker-cli",
+    "version": "1.0.0",
+    "main": "main.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "npx tsc",
+        "build-watch": "npx tsc --watch",
+        "dev": "npx ts-node src/main.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/oskarcokl/nodejs-task-tracker-cli.git"
+    },
+    "bin": {
+        "ott": "main.ts"
+    },
+    "type": "module",
+    "author": "Oskar Cokl",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/oskarcokl/nodejs-task-tracker-cli/issues"
+    },
+    "homepage": "https://github.com/oskarcokl/nodejs-task-tracker-cli#readme",
+    "description": "",
+    "devDependencies": {
+        "@tsconfig/node23": "^23.0.0",
+        "@tsconfig/recommended": "^1.0.8",
+        "@types/node": "^22.13.10"
+    }
+}
