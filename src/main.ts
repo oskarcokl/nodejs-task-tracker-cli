@@ -20,7 +20,8 @@ function main() {
         console.log("DB file doesn't exist");
         createDb();
     }
-    // TODO: Parse db.json file
+    // This will also create the db.json file if it doesn't exist.
+    const db = JSON.parse(fs.readFileSync(dbPath, { flag: 'rs', encoding: 'utf-8' }));
 
     // list of commands to support
     // add
