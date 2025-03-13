@@ -57,8 +57,10 @@ function main() {
             deleteTask(db, parseInt(process.argv[3]));
             break;
         case 'mark-in-progress':
+            markTaskInProgress(db, parseInt(process.argv[3]));
             break;
         case 'mark-done':
+            markTaskDone(db, parseInt(process.argv[3]));
             break;
         case 'list':
             listTasks(db);
@@ -129,6 +131,44 @@ function deleteTask(db: DB, id: number) {
 
     fs.writeFileSync(dbPath, JSON.stringify(db));
     console.log(`Deleted task (ID: ${id})`);
+}
+
+function markTaskInProgress(db: DB, id: number) {
+    if (typeof id === 'undefined' || isNaN(id)) {
+        console.log('An id must be provided to mark task as in progress');
+        exit(1);
+    }
+
+    const task = db.tasks.find((t) => t.id === id);
+
+    if (!task) {
+        console.log('A task with the provided ID does not exist');
+        exit(1);
+    }
+
+    task.status = 'in-progress';
+
+    fs.writeFileSync(dbPath, JSON.stringify(db));
+    console.log(`Task set to in progress (ID: ${id})`);
+}
+
+function markTaskDone(db: DB, id: number) {
+    if (typeof id === 'undefined' || isNaN(id)) {
+        console.log('An id must be provided to mark task as done');
+        exit(1);
+    }
+
+    const task = db.tasks.find((t) => t.id === id);
+
+    if (!task) {
+        console.log('A task with the provided ID does not exist');
+        exit(1);
+    }
+
+    task.status = 'done';
+
+    fs.writeFileSync(dbPath, JSON.stringify(db));
+    console.log(`Task set to done (ID: ${id})`);
 }
 
 function listTasks(db: DB) {
