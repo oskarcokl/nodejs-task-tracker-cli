@@ -7,10 +7,12 @@ type DB = {
     tasks: Task[];
 };
 
+type TaskStatus = 'todo' | 'in-progress' | 'done';
+
 type Task = {
     id: number;
     description: string;
-    status: 'todo' | 'in-progress' | 'done';
+    status: TaskStatus;
     // maybe format to a string?
     created: Date;
     updated: Date;
@@ -63,7 +65,13 @@ function main() {
             markTaskDone(db, parseInt(process.argv[3]));
             break;
         case 'list':
-            listTasks(db);
+            const statusArg = process.argv[3];
+            if (!statusArg || ['todo', 'in-progress', 'done'].includes(statusArg)) {
+                listTasks(db, statusArg as TaskStatus);
+            } else {
+                console.log('Invalid status. Must be one of: todo, in-progress, done');
+                exit(1);
+            }
             break;
         default:
             console.error('Use a valid command');
@@ -171,8 +179,25 @@ function markTaskDone(db: DB, id: number) {
     console.log(`Task set to done (ID: ${id})`);
 }
 
-function listTasks(db: DB) {
-    db.tasks.forEach((task) => console.log(task));
+function listTasks(db: DB, status?: TaskStatus) {
+    let tasks;
+
+    switch (status) {
+        case 'todo':
+            tasks = db.tasks.filter((t) => t.status === 'todo');
+            break;
+        case 'in-progress':
+            tasks = db.tasks.filter((t) => t.status === 'in-progress');
+            break;
+        case 'done':
+            tasks = db.tasks.filter((t) => t.status === 'done');
+            break;
+        default:
+            tasks = db.tasks;
+            break;
+    }
+
+    tasks.forEach((task) => console.log(task));
 }
 
 function createDb() {
