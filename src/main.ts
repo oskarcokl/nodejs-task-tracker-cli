@@ -12,8 +12,8 @@ type Task = {
     description: string;
     status: 'todo' | 'in-progress' | 'done';
     // maybe format to a string?
-    createAd: Date;
-    updatedAd: Date;
+    created: Date;
+    updated: Date;
 };
 
 // GLOBALS
@@ -67,7 +67,6 @@ function main() {
             printHelpMessage();
             exit(1);
     }
-    //# sourceMappingURL=main.js.map
 }
 
 function addTask(db: DB, description: string) {
@@ -82,8 +81,8 @@ function addTask(db: DB, description: string) {
         id: maxId + 1,
         description: description,
         status: 'todo',
-        createAd: new Date(),
-        updatedAd: new Date(),
+        created: new Date(),
+        updated: new Date(),
     };
 
     db.tasks.push(newTask);
@@ -111,6 +110,7 @@ function updateTask(db: DB, id: number, description: string) {
     }
 
     task.description = description;
+    task.updated = new Date();
 
     fs.writeFileSync(dbPath, JSON.stringify(db));
     console.log(` Task updated successfully (ID: ${id})`);
