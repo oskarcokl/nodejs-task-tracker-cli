@@ -59,6 +59,7 @@ function main() {
         case 'mark-done':
             break;
         case 'list':
+            listTasks(db);
             break;
         default:
             console.error('Use a valid command');
@@ -89,6 +90,10 @@ function addTask(db: DB, description: string) {
     fs.writeFileSync(dbPath, JSON.stringify(db));
     // write that creating of task was successful
     console.log(` Task added successfully (ID: ${newTask.id})`);
+}
+
+function listTasks(db: DB) {
+    db.tasks.forEach((task) => console.log(task));
 }
 
 function createDb() {
