@@ -54,6 +54,7 @@ function main() {
             updateTask(db, parseInt(process.argv[3]), process.argv[4]);
             break;
         case 'delete':
+            deleteTask(db, parseInt(process.argv[3]));
             break;
         case 'mark-in-progress':
             break;
@@ -113,7 +114,21 @@ function updateTask(db: DB, id: number, description: string) {
     task.updated = new Date();
 
     fs.writeFileSync(dbPath, JSON.stringify(db));
-    console.log(` Task updated successfully (ID: ${id})`);
+    console.log(`Task updated successfully (ID: ${id})`);
+}
+
+function deleteTask(db: DB, id: number) {
+    if (typeof id === 'undefined' || isNaN(id)) {
+        console.log('An id must be provided to delete a task');
+        exit(1);
+    }
+
+    const tasks = db.tasks.filter((t) => t.id != id);
+
+    db.tasks = tasks;
+
+    fs.writeFileSync(dbPath, JSON.stringify(db));
+    console.log(`Deleted task (ID: ${id})`);
 }
 
 function listTasks(db: DB) {
