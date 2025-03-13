@@ -51,6 +51,7 @@ function main() {
             addTask(db, process.argv[3]);
             break;
         case 'update':
+            updateTask(db, parseInt(process.argv[3]), process.argv[4]);
             break;
         case 'delete':
             break;
@@ -77,7 +78,6 @@ function addTask(db: DB, description: string) {
 
     const maxId = db.tasks.reduce((pId, t) => Math.max(pId, t.id), 0);
 
-    // create a task object
     const newTask: Task = {
         id: maxId + 1,
         description: description,
@@ -85,11 +85,35 @@ function addTask(db: DB, description: string) {
         createAd: new Date(),
         updatedAd: new Date(),
     };
-    // write the task object to the file
+
     db.tasks.push(newTask);
+
     fs.writeFileSync(dbPath, JSON.stringify(db));
-    // write that creating of task was successful
     console.log(` Task added successfully (ID: ${newTask.id})`);
+}
+
+function updateTask(db: DB, id: number, description: string) {
+    if (typeof description === 'undefined') {
+        console.log('A description must be provided to update a task');
+        exit(1);
+    }
+
+    if (typeof id === 'undefined' || isNaN(id)) {
+        console.log('An id must be provided to update a task');
+        exit(1);
+    }
+
+    const task = db.tasks.find((t) => t.id === id);
+
+    if (!task) {
+        console.log('A task with the provided ID does not exist');
+        exit(1);
+    }
+
+    task.description = description;
+
+    fs.writeFileSync(dbPath, JSON.stringify(db));
+    console.log(` Task updated successfully (ID: ${id})`);
 }
 
 function listTasks(db: DB) {
