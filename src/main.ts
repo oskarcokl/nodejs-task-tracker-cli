@@ -209,8 +209,22 @@ function createDb() {
     }
 }
 
+const helpMessage = `
+You can use this script to manage your tasks
+
+Usage:
+    main.js <command-name> <option/s>
+
+Commands:
+    add <description>
+    update <task-id> <description>
+    delete <task-id>
+    mark-in-progress <task-id>
+    mark-done <task-id>
+    list [<status>]
+`;
 function printHelpMessage() {
-    console.log('You should provide the tool with a command');
+    console.log(helpMessage);
 }
 
 main();
