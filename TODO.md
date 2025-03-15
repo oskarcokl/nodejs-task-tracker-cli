@@ -1,3 +1,4 @@
--   [ ] create delete function
--   [ ] create mark in progress function
--   [ ] create mark done function
+-   [x] create delete function
+-   [x] create mark in progress function
+-   [x] create mark done function
+-   [x] create a help message
